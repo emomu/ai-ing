@@ -1,0 +1,56 @@
+.memory-notification {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1000;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.memory-notification.light {
+  background-color: #FFD700;
+  color: #000000;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+}
+
+.memory-notification.dark {
+  background-color: #FFD700;
+  color: #000000;
+  box-shadow: 0 4px 30px rgba(255, 215, 0, 0.5);
+}
+
+.memory-icon {
+  font-size: 1.5rem;
+  animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.memory-text {
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .memory-notification {
+    top: 80px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .memory-icon {
+    font-size: 1.25rem;
+  }
+}

@@ -1,0 +1,45 @@
+.wave-animation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 100%;
+}
+
+.wave-bar {
+  width: 8px;
+  height: 100px;
+  border-radius: 4px;
+  transform-origin: center;
+}
+
+.wave-bar.light {
+  background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%);
+}
+
+.wave-bar.dark {
+  background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .wave-bar {
+    width: 6px;
+    height: 80px;
+  }
+
+  .wave-animation {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wave-bar {
+    width: 5px;
+    height: 60px;
+  }
+
+  .wave-animation {
+    gap: 8px;
+  }
+}

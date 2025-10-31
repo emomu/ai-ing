@@ -1,70 +1,153 @@
-# Getting Started with Create React App
+# AI English Learning App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, interactive web application for practicing English conversation with AI. Built with React, Gemini AI, and Web Speech API.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Voice Conversations**: Natural voice conversations with AI at your level
+- **Adaptive Learning**: AI adjusts conversation complexity based on your English level (A1-C2)
+- **Memory System**: AI learns about you and remembers important details
+- **Real-time Transcription**: See what you're saying in real-time
+- **Beautiful Animations**: Smooth, ChatGPT-style wave animations during conversations
+- **Dark/Light Theme**: Toggle between elegant dark and light themes
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **No Login Required**: Start practicing immediately
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React 19
+- Zustand (State Management)
+- Framer Motion (Animations)
+- Google Gemini AI
+- Web Speech API
+- React Router
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js 14 or higher
+- A Google Gemini API key
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd ai-ing
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies:
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Create a `.env` file in the root directory:
+```bash
+cp .env.example .env
+```
 
-### `npm run eject`
+4. Add your Gemini API key to `.env`:
+```
+REACT_APP_GEMINI_API_KEY=your_actual_api_key_here
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+To get a Gemini API key:
+- Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+- Sign in with your Google account
+- Click "Create API Key"
+- Copy and paste it into your `.env` file
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+5. Start the development server:
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+6. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Usage
 
-## Learn More
+### Starting a Conversation
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Make sure your microphone is enabled
+2. Select your English level in Settings (A1-C2)
+3. Click "Start Conversation" on the main page
+4. The AI will greet you and start the conversation
+5. Speak naturally - the AI will respond and adjust to your level
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Settings
 
-### Code Splitting
+- **Theme**: Switch between light and dark mode
+- **Animations**: Toggle wave animations on/off
+- **Level**: Choose your English proficiency level (A1-C2)
+- **Memory**: View what the AI has learned about you
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Memory System
 
-### Analyzing the Bundle Size
+The AI automatically saves interesting facts about you during conversations. When it learns something new, you'll see a "Memory Saved" notification with a sound effect.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Browser Compatibility
 
-### Making a Progressive Web App
+This app works best in modern browsers that support the Web Speech API:
+- Chrome/Edge (recommended)
+- Safari
+- Firefox (limited support)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Color Scheme
 
-### Advanced Configuration
+### Light Theme
+- Primary: Gold (#FFD700)
+- Secondary: Gray-50 (#F9FAFB)
+- Background: White (#FFFFFF)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Dark Theme
+- Primary: Gold (#FFD700)
+- Secondary: Stone-950 (#0C0A09)
+- Background: Black (#000000)
 
-### Deployment
+## Development
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Available Scripts
 
-### `npm run build` fails to minify
+- `npm start` - Run development server
+- `npm build` - Build for production
+- `npm test` - Run tests
+- `npm eject` - Eject from Create React App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Project Structure
+
+```
+src/
+├── components/          # React components
+│   ├── VoiceCall.jsx   # Main conversation interface
+│   ├── Settings.jsx    # Settings page
+│   ├── Navigation.jsx  # Navigation bar
+│   ├── WaveAnimation.jsx    # Voice wave animation
+│   └── MemoryNotification.jsx   # Memory save notification
+├── services/           # Service modules
+│   ├── geminiService.js     # Gemini AI integration
+│   └── speechService.js     # Speech recognition/synthesis
+├── store/              # State management
+│   └── useStore.js     # Zustand store
+├── styles/             # CSS files
+│   ├── VoiceCall.css
+│   ├── Settings.css
+│   ├── Navigation.css
+│   ├── WaveAnimation.css
+│   └── MemoryNotification.css
+└── App.js              # Main app component
+```
+
+## Contributing
+
+Contributions are welcome! Feel free to submit issues or pull requests.
+
+## License
+
+MIT License
+
+## Acknowledgments
+
+- Google Gemini AI for powering conversations
+- ChatGPT for design inspiration
+- Web Speech API for voice capabilities
