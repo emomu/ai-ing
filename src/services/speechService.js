@@ -65,7 +65,11 @@ class SpeechService {
     }
   }
 
-  speak(text, onStart, onEnd) {
+  getAvailableVoices() {
+    return this.synthesis ? this.synthesis.getVoices() : [];
+  }
+
+  speak(text, onStart, onEnd, voiceSettings = {}) {
     if (!this.synthesis) {
       console.error('Speech synthesis not supported');
       return;
@@ -86,18 +90,61 @@ class SpeechService {
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.lang = 'en-US';
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
+    utterance.rate = voiceSettings.rate || 0.95; // Use custom rate or default
+    utterance.pitch = voiceSettings.pitch || 1.1; // Use custom pitch or default
     utterance.volume = 1;
 
-    // Get English voices
+    // Get the best quality female English voice available
     const voices = this.synthesis.getVoices();
-    const englishVoice = voices.find(voice =>
-      voice.lang.startsWith('en-') && voice.name.includes('Female')
-    ) || voices.find(voice => voice.lang.startsWith('en-'));
 
-    if (englishVoice) {
-      utterance.voice = englishVoice;
+    let selectedVoice = null;
+
+    // If user has selected a specific voice, use it
+    if (voiceSettings.voiceName) {
+      selectedVoice = voices.find(voice => voice.name === voiceSettings.voiceName);
+    }
+
+    // If no voice selected or not found, use default selection logic
+    if (!selectedVoice) {
+      // Try to find high quality female voices in order of preference
+      const preferredVoiceNames = [
+        'Samantha', // macOS - very natural
+        'Google US English',
+        'Microsoft Zira', // Windows
+        'Karen', // macOS
+        'Victoria', // macOS
+        'Fiona', // macOS
+        'Moira', // macOS
+        'Tessa', // macOS
+        'Veena', // macOS
+      ];
+
+      // First try to find a preferred voice
+      for (const voiceName of preferredVoiceNames) {
+        selectedVoice = voices.find(voice =>
+          voice.name.includes(voiceName) && voice.lang.startsWith('en-')
+        );
+        if (selectedVoice) break;
+      }
+
+      // If no preferred voice found, try any female English voice
+      if (!selectedVoice) {
+        selectedVoice = voices.find(voice =>
+          voice.lang.startsWith('en-') &&
+          (voice.name.toLowerCase().includes('female') ||
+           voice.name.toLowerCase().includes('woman'))
+        );
+      }
+
+      // Fallback to any English voice
+      if (!selectedVoice) {
+        selectedVoice = voices.find(voice => voice.lang.startsWith('en-'));
+      }
+    }
+
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+      console.log('Using voice:', selectedVoice.name);
     }
 
     utterance.onstart = () => {

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import useStore from '../store/useStore';
 import { useTranslation } from '../utils/translations';
+import speechService from '../services/speechService';
 import '../styles/Settings.css';
 
 const Settings = () => {
@@ -16,8 +17,18 @@ const Settings = () => {
     setInterfaceLanguage,
     showTranslation,
     setShowTranslation,
+    voiceRate,
+    setVoiceRate,
+    voicePitch,
+    setVoicePitch,
+    selectedVoiceName,
+    setSelectedVoiceName,
     userMemory,
   } = useStore();
+
+  const [availableVoices, setAvailableVoices] = useState([]);
+  const [isLoadingVoices, setIsLoadingVoices] = useState(true);
+  const [isTestingVoice, setIsTestingVoice] = useState(false);
 
   const isDark = theme === 'dark';
   const t = useTranslation(interfaceLanguage);
@@ -27,8 +38,49 @@ const Settings = () => {
     { code: 'en', name: 'English' },
   ];
 
+  useEffect(() => {
+    // Load available voices
+    const loadVoices = () => {
+      const voices = speechService.getAvailableVoices();
+      // Filter only English voices
+      const englishVoices = voices.filter(voice => voice.lang.startsWith('en-'));
+      setAvailableVoices(englishVoices);
+      setIsLoadingVoices(false);
+    };
+
+    // Voices might not be loaded immediately
+    loadVoices();
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    // Timeout to stop loading if voices don't load
+    const timeout = setTimeout(() => {
+      setIsLoadingVoices(false);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   const getLevelDescription = (level) => {
     return t(`level${level}`);
+  };
+
+  const handleTestVoice = () => {
+    setIsTestingVoice(true);
+    const testText = "Hello! This is how I sound. How are you today?";
+    speechService.speak(
+      testText,
+      () => {},
+      () => {
+        setIsTestingVoice(false);
+      },
+      {
+        rate: voiceRate,
+        pitch: voicePitch,
+        voiceName: selectedVoiceName,
+      }
+    );
   };
 
   return (
@@ -120,6 +172,82 @@ const Settings = () => {
                 />
               </motion.button>
             </div>
+          </div>
+
+          <div className="settings-section">
+            <h2 className="section-title">{t('voiceSettings')}</h2>
+
+            <div className="setting-item">
+              <div className="setting-info">
+                <label className="setting-label">{t('voiceSelection')}</label>
+              </div>
+              {isLoadingVoices ? (
+                <div className="loading-voices">Yükleniyor...</div>
+              ) : (
+                <select
+                  className="voice-select"
+                  value={selectedVoiceName}
+                  onChange={(e) => setSelectedVoiceName(e.target.value)}
+                  disabled={availableVoices.length === 0}
+                >
+                  <option value="">{t('selectVoice')}</option>
+                  {availableVoices.map((voice) => (
+                    <option key={voice.name} value={voice.name}>
+                      {voice.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            <div className="setting-item">
+              <div className="setting-info">
+                <label className="setting-label">{t('voiceSpeed')}: {voiceRate.toFixed(2)}x</label>
+              </div>
+              <div className="slider-container">
+                <span className="slider-label">{t('slow')}</span>
+                <input
+                  type="range"
+                  min="0.5"
+                  max="2.0"
+                  step="0.05"
+                  value={voiceRate}
+                  onChange={(e) => setVoiceRate(parseFloat(e.target.value))}
+                  className="voice-slider"
+                />
+                <span className="slider-label">{t('fast')}</span>
+              </div>
+            </div>
+
+            <div className="setting-item">
+              <div className="setting-info">
+                <label className="setting-label">{t('voicePitch')}: {voicePitch.toFixed(2)}</label>
+              </div>
+              <div className="slider-container">
+                <span className="slider-label">{t('low')}</span>
+                <input
+                  type="range"
+                  min="0.5"
+                  max="2.0"
+                  step="0.1"
+                  value={voicePitch}
+                  onChange={(e) => setVoicePitch(parseFloat(e.target.value))}
+                  className="voice-slider"
+                />
+                <span className="slider-label">{t('high')}</span>
+              </div>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: isTestingVoice ? 1 : 1.02 }}
+              whileTap={{ scale: isTestingVoice ? 1 : 0.98 }}
+              onClick={handleTestVoice}
+              className="test-voice-btn"
+              disabled={isTestingVoice || availableVoices.length === 0}
+              style={{ opacity: isTestingVoice ? 0.7 : 1 }}
+            >
+              {isTestingVoice ? '🔊 Test ediliyor...' : `🎤 ${t('testVoice')}`}
+            </motion.button>
           </div>
 
           <div className="settings-section">

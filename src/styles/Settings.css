@@ -260,3 +260,108 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Voice Settings */
+.voice-select {
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 2px solid #FFD700;
+  background-color: transparent;
+  color: inherit;
+  font-size: 1rem;
+  min-width: 200px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.voice-select:focus {
+  outline: none;
+  border-color: #FFA500;
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+.voice-select option {
+  background-color: #FFFFFF;
+  color: #111827;
+}
+
+.settings.dark .voice-select option {
+  background-color: #1C1917;
+  color: #F9FAFB;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 300px;
+}
+
+.slider-label {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  min-width: 50px;
+}
+
+.voice-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.voice-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #FFD700;
+  cursor: pointer;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.voice-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+}
+
+.voice-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #FFD700;
+  cursor: pointer;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.voice-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+}
+
+.test-voice-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 2px solid #FFD700;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #000000;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.test-voice-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+}

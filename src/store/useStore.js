@@ -24,6 +24,14 @@ const useStore = create(
       showTranslation: false,
       setShowTranslation: (show) => set({ showTranslation: show }),
 
+      // Voice settings
+      voiceRate: 0.95,
+      setVoiceRate: (rate) => set({ voiceRate: rate }),
+      voicePitch: 1.1,
+      setVoicePitch: (pitch) => set({ voicePitch: pitch }),
+      selectedVoiceName: '',
+      setSelectedVoiceName: (name) => set({ selectedVoiceName: name }),
+
       // User memory - AI learns about the user
       userMemory: [],
       addMemory: (memory) => {
@@ -68,6 +76,9 @@ const useStore = create(
         showAnimations: state.showAnimations,
         interfaceLanguage: state.interfaceLanguage,
         showTranslation: state.showTranslation,
+        voiceRate: state.voiceRate,
+        voicePitch: state.voicePitch,
+        selectedVoiceName: state.selectedVoiceName,
         userMemory: state.userMemory,
         conversationHistory: state.conversationHistory,
       }),

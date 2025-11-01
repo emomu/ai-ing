@@ -27,6 +27,9 @@ const VoiceCall = () => {
     userMemory,
     showMemoryNotification,
     setShowMemoryNotification,
+    voiceRate,
+    voicePitch,
+    selectedVoiceName,
   } = useStore();
 
   const [transcript, setTranscript] = useState('');
@@ -80,6 +83,11 @@ const VoiceCall = () => {
         () => {
           setIsSpeaking(false);
           startListening();
+        },
+        {
+          rate: voiceRate,
+          pitch: voicePitch,
+          voiceName: selectedVoiceName,
         }
       );
     } catch (err) {
@@ -222,6 +230,11 @@ const VoiceCall = () => {
           } else {
             console.log('Call not active, not restarting listening');
           }
+        },
+        {
+          rate: voiceRate,
+          pitch: voicePitch,
+          voiceName: selectedVoiceName,
         }
       );
     } catch (error) {

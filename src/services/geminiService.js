@@ -59,36 +59,57 @@ ${memoryContext}`;
     this.conversationHistory = [];
   }
 
-  async sendMessage(message) {
+  async sendMessage(message, retries = 3) {
     if (!this.model) {
       throw new Error('Gemini not initialized');
     }
 
-    // Build the full prompt with context and history
-    let fullPrompt = this.systemContext + '\n\n';
+    let lastError;
 
-    if (this.conversationHistory.length > 0) {
-      fullPrompt += 'Previous conversation:\n';
-      this.conversationHistory.forEach(msg => {
-        fullPrompt += `${msg.role}: ${msg.content}\n`;
-      });
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        // Build the full prompt with context and history
+        let fullPrompt = this.systemContext + '\n\n';
+
+        if (this.conversationHistory.length > 0) {
+          fullPrompt += 'Previous conversation:\n';
+          this.conversationHistory.forEach(msg => {
+            fullPrompt += `${msg.role}: ${msg.content}\n`;
+          });
+        }
+
+        fullPrompt += `\nUser: ${message}\nAssistant:`;
+
+        const result = await this.model.generateContent(fullPrompt);
+        const response = result.response.text();
+
+        // Save to history
+        this.conversationHistory.push({ role: 'User', content: message });
+        this.conversationHistory.push({ role: 'Assistant', content: response });
+
+        // Keep only last 10 exchanges to avoid token limits
+        if (this.conversationHistory.length > 20) {
+          this.conversationHistory = this.conversationHistory.slice(-20);
+        }
+
+        return response;
+      } catch (error) {
+        lastError = error;
+        console.error(`Gemini API attempt ${attempt + 1} failed:`, error);
+
+        // If it's the last attempt, throw the error
+        if (attempt === retries - 1) {
+          throw new Error('Failed to get AI response after multiple attempts. Please try again.');
+        }
+
+        // Wait before retrying (exponential backoff: 1s, 2s, 4s)
+        const delay = Math.min(1000 * Math.pow(2, attempt), 5000);
+        console.log(`Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
     }
 
-    fullPrompt += `\nUser: ${message}\nAssistant:`;
-
-    const result = await this.model.generateContent(fullPrompt);
-    const response = result.response.text();
-
-    // Save to history
-    this.conversationHistory.push({ role: 'User', content: message });
-    this.conversationHistory.push({ role: 'Assistant', content: response });
-
-    // Keep only last 10 exchanges to avoid token limits
-    if (this.conversationHistory.length > 20) {
-      this.conversationHistory = this.conversationHistory.slice(-20);
-    }
-
-    return response;
+    throw lastError;
   }
 
   extractMemoryFromResponse(response) {
